@@ -1,0 +1,44 @@
+---
+title: "Class Notes 2-5"
+author: "Angela Fu"
+date: "2/5/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(babynames)
+library(tidyverse)
+```
+
+## Vowels
+
+```{r}
+
+# Classwork
+
+data <- babynames %>%
+  group_by(name)%>%
+  filter(year %in% c("1956", "2006")) %>%
+  mutate(letter=ifelse(str_detect(name,"^A"), "a",
+                      ifelse(str_detect(name, "^E"), "e",
+                      ifelse(str_detect(name, "^I"), "i",
+                      ifelse(str_detect(name, "^O"), "o",
+                      ifelse(str_detect(name, "^U"), "u", "consonant")))))) %>%
+  group_by(year, letter) %>%
+  filter(letter != "consonant") %>%
+
+# Example from class
+  
+class_example <- babynames %>%
+  mutate(vowels = str_count(name, "a|e|i|o|u")) %>%
+  group_by(year, sex) %>%
+  summarise(number_vowels = mean(vowels)) %>%
+  ggplot(aes(x=year, y=number_vowels, color = sex))+
+  geom_line()+
+  labs(y="Number of Vowels",
+       x="Year",
+       title="Average Number of Vowels in Names Over Time")
+
+```
+
